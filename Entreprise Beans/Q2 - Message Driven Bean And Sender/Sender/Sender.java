@@ -1,7 +1,7 @@
 import javax.naming.*;
 import javax.jms.*;
 
-public class Receiver {
+public class Sender {
     public static void main(String[] args) {
 	
 		try{
@@ -22,18 +22,22 @@ public class Receiver {
         
         //Start Connection
 		connection.start();
-
-		//Create Receiver
-		QueueReceiver receiver =session.createReceiver(queue);
 		
-		//Receive Message
-		TextMessage msg = (TextMessage) receiver.receive();
-		
-		//Print Message
-		System.out.println("MESSAGE : "+msg.getText());
+		//Create Queue Sender
+        QueueSender sender = session.createSender(queue);
+        TextMessage msg = session.createTextMessage();
+        
+		//Get Msg text From ARGS
+        msg.setText(args[0]);
+        
+        //Get Receivers From ARGS
+        for(int i=1; i<args.length;i++){
+			msg.setStringProperty("receiver", args[i]);
+         sender.send(msg);
 
-	} catch (Exception e) {
-			System.out.println(e.getMessage());
+        }
+	} catch(Exception e){
+		System.out.println(e.getMessage());
 	}
         
     }
