@@ -6,8 +6,9 @@ public class Sender {
 	
 		try{
 			
-		TopicConnectionFactory connectionFactory = (TopicConnectionFactory) messaging.lookup("...");
-		Topic topic = (Topic) messaging.lookup("...");
+        InitialContext messaging = new InitialContext();
+		TopicConnectionFactory connectionFactory = (TopicConnectionFactory) messaging.lookup("jms/CFMessages");
+		Topic topic = (Topic) messaging.lookup("jms/TMessages");
 		TopicConnection connection = connectionFactory.createTopicConnection();
 		TopicSession session = connection.createTopicSession(false, Session.AUTO_ACKNOWLEDGE);
 		connection.start();
@@ -22,10 +23,11 @@ public class Sender {
 
 
         TextMessage msg = session.createTextMessage();
-        msg.setText("Hello");
 
 
-        for(int i=1; i<5;i++){
+        for(int i=0; i<5;i++){
+			 msg.setText("Hello "+i);
+			 System.out.println("Hello "+i);
 			publisher.publish(msg);
 
         }
